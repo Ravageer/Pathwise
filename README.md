@@ -25,6 +25,9 @@ APIs: Google Gmail API, College Scorecard API
 Styling: Custom stylesheets for a modern, responsive UI
 
 🚀 Getting Started:
+
+To run the app without any setup download and run the exe in releases
+
 Follow these steps to get Pathwise running on your local machine.
 
 1. Prerequisites
