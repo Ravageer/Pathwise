@@ -24,7 +24,7 @@ APIs: Google Gmail API, College Scorecard API
 
 Styling: Custom stylesheets for a modern, responsive UI
 
-🚀 Getting Started: Lock In
+🚀 Getting Started:
 Follow these steps to get Pathwise running on your local machine.
 
 1. Prerequisites
@@ -139,6 +139,8 @@ Update Your .env file:
 Make sure the path in your .env file points to this file.
 
 GMAIL_CREDENTIALS_PATH="credentials.json"
+
+Download the font files for a better interface
 
 ▶️ Running the Application
 Once your dependencies are installed and your .env file is configured, you're ready to go.
