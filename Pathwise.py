@@ -46,7 +46,7 @@ genai.configure(api_key=GEMINI_KEY)
 GEMINI_MODEL = genai.GenerativeModel("gemini-1.5-flash")
 
 # ------------------------------------------------------------------
-# 2.  Gmail Monitor (no-n8n)
+# 2.  Gmail Monitor 
 # ------------------------------------------------------------------
 class GmailMonitor(QObject):
     result_found = pyqtSignal(str, str)
@@ -104,7 +104,7 @@ class GmailMonitor(QObject):
                     self.result_found.emit(app["id"], res)
                     self._mark_read(m["id"])
 
-    # ---- Gmail helpers ------------------------------------------------
+    # ---- Gmail helpers ----
     def _query(self, domains):
         d = " OR ".join(f"from:@{dom}" for dom in domains)
         kw = ("decision OR admitted OR rejected OR waitlist OR deferred OR "
@@ -233,14 +233,14 @@ def fetch_colleges(min_sat=0, max_sat=1600, state="", ownership="", api_key="fIr
 
 
 # Securely load API key for Gemini
-gemini_api_key = "AIzaSyD-OVmWRATEH5e18Y06c192Cbn0igs3e3E"
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 if gemini_api_key:
     genai.configure(api_key=gemini_api_key)
     model = genai.GenerativeModel("models/gemini-1.5-flash")
 else:
     print("WARNING: GEMINI_API_KEY environment variable not set. AI features might not work.")
-    # You might want to disable AI features or show a persistent warning in the UI
-    model = None  # Set model to None if API key is missing
+    
+    model = None  
 
 
 # --- Supporting UI Components (SlideCard, CardHeader, ExpandedCard) ---
@@ -413,7 +413,7 @@ class GmailWorker(QObject):
                 except Exception as e:
                     self.error.emit(str(e))
                     return
-                    # ... inside the run method
+                    
                 else:
                     # ---- first-time flow ----
                     # Get the path from the environment variable you set in .env
@@ -460,7 +460,7 @@ class GmailAuthPanel(QDialog):
         self.apply_styles()
 
     # ------------------------------------------------------------------
-    # UI boiler-plate (same look as before)
+    # UI boiler-plate                      
     # ------------------------------------------------------------------
     def init_ui(self):
         main_layout = QVBoxLayout(self)
@@ -562,7 +562,7 @@ class ApplicationEntryPanel(QWidget):
 
     # --- In the ApplicationEntryPanel class ---
 
-    # ADD THIS ENTIRE METHOD
+    
     def _handle_gmail_auth_success(self, app_data):
         """
         This slot is called after the GmailAuthPanel reports a successful connection.
@@ -803,17 +803,17 @@ class ApplicationEntryPanel(QWidget):
     def clear_form(self):
         """Resets all input fields in the application entry form."""
         self.fields['school_name'].clear()
-        self.fields['application_type'].setCurrentIndex(0)  # Reset to the first item ("ED")
+        self.fields['application_type'].setCurrentIndex(0)  
         self.fields['major'].clear()
         self.fields['deadline'].setDate(QDate.currentDate())
         self.fields['portal_link'].clear()
-        self.fields['auto_monitor'].setChecked(True)  # Or False, depending on your desired default
+        self.fields['auto_monitor'].setChecked(True)  
         self.fields['notes'].clear()
         print("Application form cleared.")
 
         # --- In the ApplicationEntryPanel class ---
 
-        # REPLACE the old save_application_prompt_gmail method with this one
+                                                                               
     def save_application_prompt_gmail(self):
         app_data = {
                 "school_name": self.fields['school_name'].text().strip(),
@@ -864,7 +864,7 @@ class ApplicationEntryPanel(QWidget):
 class ApplicationDashboardPanel(QWidget):
     app_updated = pyqtSignal(str, dict)
 
-    # NEW SIGNALS FOR AI COMMUNICATION
+    
     ai_response_ready = pyqtSignal(str)
     ai_loading_finished = pyqtSignal()
 
@@ -879,7 +879,7 @@ class ApplicationDashboardPanel(QWidget):
         self.resize_timer.setSingleShot(True)
         self.resize_timer.timeout.connect(self._recalculate_card_layout)
 
-        # Connect the new signals to their slots
+        
         self.ai_response_ready.connect(self._display_ai_response)
         self.ai_loading_finished.connect(self._stop_ai_loading)
 
@@ -887,26 +887,36 @@ class ApplicationDashboardPanel(QWidget):
         """Slot to display AI response from worker thread."""
         self.ai_response_label.setText(response_text)
 
+    
     def _prompt_decision_result(self, app_id):
-        dialog = QMessageBox(self)
-        dialog.setWindowTitle("Enter Decision Result")
-        dialog.setText(f"Enter the decision result for application ID: {app_id}")
-
+        # --- Create a custom dialog window ---
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Update Application Result")
+        dialog.setFixedSize(350, 150)
+    
+        # --- Main layout for the dialog ---
+        main_layout = QVBoxLayout(dialog)
+    
+        # --- Add widgets to the dialog ---
+        label = QLabel(f"Select the decision result for this application:")
+        main_layout.addWidget(label)
+    
         input_combo = QComboBox(dialog)
         input_combo.addItems(["Accepted", "Rejected", "Waitlisted", "Deferred"])
-
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("Select Result:"))
-        layout.addWidget(input_combo)
-        dialog.layout().addLayout(layout)  # Add to existing QMessageBox layout
-
-        dialog.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
-
-        ret = dialog.exec()
-        if ret == QMessageBox.StandardButton.Ok:
+        main_layout.addWidget(input_combo)
+    
+        # --- Add OK and Cancel buttons ---
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        button_box.accepted.connect(dialog.accept)
+        button_box.rejected.connect(dialog.reject)
+        main_layout.addWidget(button_box)
+    
+        # --- Show the dialog and get the result ---
+        # The .exec() method shows the dialog and waits until the user clicks OK or Cancel
+        if dialog.exec() == QDialog.DialogCode.Accepted:
             selected_result = input_combo.currentText()
+            # Emit the signal to update the application data, just like before
             self.app_updated.emit(app_id, {"result": selected_result, "status": "Decision Processed"})
-
     def toggle_monitor(self, app_id: str, enable: bool):
 
         # Always emit; handle_app_update will open the Gmail dialog if needed
@@ -914,7 +924,7 @@ class ApplicationDashboardPanel(QWidget):
     def _confirm_toggle(self, app_id, enable):
         """Safely emit the toggle change to the main window."""
         print(f"[Toggle] App ID {app_id} set to auto_monitor={enable}")
-        main_window = self.window()  # top-level CombinedApp
+        main_window = self.window()  
         if hasattr(main_window, "app_updated"):
             main_window.app_updated.emit(app_id, {"auto_monitor": enable})
         else:
@@ -1059,7 +1069,7 @@ class ApplicationDashboardPanel(QWidget):
             return
 
         self.ai_question_input.setEnabled(False)
-        self.ai_response_ready.emit("Thinking...")  # Use signal here too
+        self.ai_response_ready.emit("Thinking...")  
         if self.ai_loading_movie:
             self.ai_loading_label.setVisible(True)
             self.ai_loading_movie.start()
@@ -1078,7 +1088,7 @@ class ApplicationDashboardPanel(QWidget):
 
         applications_text = json.dumps(app_summary, indent=2)
 
-        panel_instance = self  # Get a safe reference to self
+        panel_instance = self  
 
         def worker():
             try:
@@ -1090,8 +1100,8 @@ class ApplicationDashboardPanel(QWidget):
                     f"Keep your answer to a maximum of 1-3 sentences. Avoid conversational filler. Your response should be addressing the applicant directly."
                 )
 
-                # Retrieve the API key securely again, just in case
-                current_gemini_api_key = "AIzaSyD-OVmWRATEH5e18Y06c192Cbn0igs3e3E"
+                
+                current_gemini_api_key = os.getenv("GEMINI_API_KEY")
                 if not current_gemini_api_key:
                     panel_instance.ai_response_ready.emit(
                         "Error: Gemini API Key (GEMINI_API_KEY) is not set in environment variables."
@@ -1321,41 +1331,38 @@ class ApplicationDashboardPanel(QWidget):
             link.setFont(QFont("Segoe UI", 13))
             layout.addWidget(link)
 
-        # Auto monitor checkbox
-        # --- inside _create_application_card() ---
-        mon_layout = QHBoxLayout()
+# This is the button layout code
+        actions_layout = QHBoxLayout()
 
-        # 1. create the checkbox
         toggle = QCheckBox("Auto Monitor")
         toggle.setChecked(app_data.get("auto_monitor", False))
         toggle.setStyleSheet("QCheckBox { color: #E0E0E0; font-size: 13px; }")
-
-        # 2. **store its *ID* instead of the widget pointer**
-        toggle.setProperty("app_id", app_data["id"])
-
-        # 3. **single-argument lambda** — no QObject pointer captured
         toggle.stateChanged.connect(
             lambda state, aid=app_data["id"]: self.toggle_monitor(aid, bool(state))
         )
+        actions_layout.addWidget(toggle)
+        actions_layout.addStretch(1)
 
-        mon_layout.addWidget(toggle)
-        mon_layout.addStretch(1)
-        # Delete button
+        
+        update_btn = QPushButton("✍️ Update")
+        update_btn.setStyleSheet("""
+            QPushButton { background-color: #5bc0de; color: white; padding: 6px 12px; border-radius: 6px; }
+            QPushButton:hover { background-color: #31b0d5; }
+        """)
+        # This button calls the existing function to open the results dialog
+        update_btn.clicked.connect(lambda _, id=app_data.get("id"): self._prompt_decision_result(id))
+        actions_layout.addWidget(update_btn)
+
+
         delete_btn = QPushButton("🗑 Remove")
         delete_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #d9534f;
-                color: white;
-                padding: 6px 12px;
-                border-radius: 6px;
-            }
-            QPushButton:hover {
-                background-color: #c9302c;
-            }
+            QPushButton { background-color: #d9534f; color: white; padding: 6px 12px; border-radius: 6px; }
+            QPushButton:hover { background-color: #c9302c; }
         """)
         delete_btn.clicked.connect(lambda _, id=app_data.get("id"): self._remove_application(id))
-        mon_layout.addWidget(delete_btn)
-        layout.addLayout(mon_layout)
+        actions_layout.addWidget(delete_btn)
+
+        layout.addLayout(actions_layout)
 
         # Optionally show "Enter Decision" if released but still pending
         if status == "Decision Released" and result in ["Pending", "Deferred", "Waitlisted"]:
@@ -1625,9 +1632,9 @@ class CombinedApp(QMainWindow):
 
         self.stack.addWidget(self.application_tracker_ui)
 
-        # In Pathwise.py, inside the CombinedApp class
+        
 
-        # REPLACE the old handle_app_update method with this one:
+        
     @pyqtSlot(str, dict)
     def handle_app_update(self, action, data):
         """Handles deleting or updating an application from the dashboard."""
@@ -2420,7 +2427,7 @@ No bold words or letters, have at least 5 career paths, 5 recommended college ma
         self.stack.addWidget(self.explainer_ui)
         self.apply_theme(self.current_theme)
 
-        ### REPLACE the entire `on_generate` method WITH THIS ###
+        
     def on_generate(self, test_mode=False):
         topic = self.topicInput.text().strip()
         if not topic:
