@@ -14,8 +14,8 @@ venv/
 applications.json
 Dockerfile
 yes.html
-Pathwise2.py
+../../PycharmProjects/PathwisePackage/Pathwise2.py
 history.json
 career_history.json
 research.py
-
+../../PycharmProjects/PathwisePackage/main.py

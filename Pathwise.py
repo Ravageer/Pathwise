@@ -8,26 +8,18 @@ import difflib
 import requests
 from datetime import datetime, timezone
 import weakref
-
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-import os
-
-
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True) 
 import google.generativeai as genai
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 import traceback
 import faulthandler
-faulthandler.enable()          # Dump tracebacks on fatal errors
-
-
-
-
+faulthandler.enable()    
 
 def excepthook(exc_type, exc_value, exc_tb):
 
@@ -36,18 +28,16 @@ def excepthook(exc_type, exc_value, exc_tb):
     print("".join(lines))
     sys.exit(1)
 sys.excepthook = excepthook
-# ------------------------------------------------------------------
 # 1.  Constants & Globals
-# ------------------------------------------------------------------
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 TOKEN_FILE = "gmail_token.pickle"
 GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_KEY)
-GEMINI_MODEL = genai.GenerativeModel("gemini-1.5-flash")
+GEMINI_MODEL = genai.GenerativeModel("gemini-2.5-flash")
 
-# ------------------------------------------------------------------
+
 # 2.  Gmail Monitor (no-n8n)
-# ------------------------------------------------------------------
+
 class GmailMonitor(QObject):
     result_found = pyqtSignal(str, str)
 
@@ -104,7 +94,7 @@ class GmailMonitor(QObject):
                     self.result_found.emit(app["id"], res)
                     self._mark_read(m["id"])
 
-    # ---- Gmail helpers ------------------------------------------------
+    #  Gmail helpers 
     def _query(self, domains):
         d = " OR ".join(f"from:@{dom}" for dom in domains)
         kw = ("decision OR admitted OR rejected OR waitlist OR deferred OR "
@@ -233,10 +223,11 @@ def fetch_colleges(min_sat=0, max_sat=1600, state="", ownership="", api_key="fIr
 
 
 # Securely load API key for Gemini
-gemini_api_key = "AIzaSyD-OVmWRATEH5e18Y06c192Cbn0igs3e3E"
+gemini_api_key = GEMINI_KEY
 if gemini_api_key:
     genai.configure(api_key=gemini_api_key)
-    model = genai.GenerativeModel("models/gemini-1.5-flash")
+    # Dropped the "models/" prefix here for consistency
+    model = genai.GenerativeModel("gemini-2.5-flash")
 else:
     print("WARNING: GEMINI_API_KEY environment variable not set. AI features might not work.")
     # You might want to disable AI features or show a persistent warning in the UI
@@ -1091,7 +1082,7 @@ class ApplicationDashboardPanel(QWidget):
                 )
 
                 # Retrieve the API key securely again, just in case
-                current_gemini_api_key = "AIzaSyD-OVmWRATEH5e18Y06c192Cbn0igs3e3E"
+                current_gemini_api_key = GEMINI_KEY
                 if not current_gemini_api_key:
                     panel_instance.ai_response_ready.emit(
                         "Error: Gemini API Key (GEMINI_API_KEY) is not set in environment variables."
