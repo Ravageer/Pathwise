@@ -9,8 +9,11 @@
 You can either download the demo exe to simply run it or manuallly set it up.
 
 Manual setup:
+
   -Install the dependencies from the requirements.txt
+  
   -Create a .env file following the provided example and fill it in.
+  
       1. Grab a gemini api key by navigating to Google AI Studio, accepting the terms of service, and clicking "Create API key" to generate a unique string.
     
 
