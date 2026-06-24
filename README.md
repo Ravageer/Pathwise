@@ -166,7 +166,7 @@ Planned improvements include:
 
 ## AI Usage Disclosure
 
-Artificial intelligence tools were used as development assistants for debugging, documentation, brainstorming, and code explanations.
+Artificial intelligence tools were used as development assistants for debugging, documentation, brainstorming, and api explanations.
 
 All application design decisions, implementation, integration, testing, and project direction were completed by the author.
 
