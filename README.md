@@ -1,153 +1,179 @@
-Pathwise - Your Personal AI Career & Academic Co-Pilot 🚀
-What is this?
-Pathwise is a desktop application I built to be a co-pilot for high school students navigating the chaotic journey of college applications and academic planning. It's not just another boring spreadsheet; it's a multi-tool powered by the Google Gemini AI to give you personalized career guidance, break down complex academic topics, and keep your college applications organized.
+# Pathwise
 
-This project was born from my own experience as a student trying to connect my passions in quantum physics, engineering, and AI with a clear path forward. Pathwise is my attempt to build the tool I wish I had.
+> An intelligent college application management platform that helps students discover universities, track applications, monitor admissions updates, and make informed decisions throughout the college admissions process.
 
-Core Features ✨
-🧠 AI Career Counselor: Feed it your skills, interests, classes, and extracurriculars, and get detailed, realistic recommendations for career paths, college majors, and top universities.
+---
 
-👨‍🏫 Academic Explainer: Stuck on a tough concept from AP Physics or Calculus? Ask the explainer to break it down for you like a world-class teacher, with a special "test mode" to get you ready for exams.
+## Why Pathwise?
 
-🎓 College Match Engine: A powerful tool to filter and find colleges based on SAT scores, location, and more, using data from the College Scorecard API.
+The college application process is fragmented.
 
-📬 Application Tracker: A sleek dashboard to manage all your college applications. It includes an optional, secure Gmail integration that automatically scans your inbox for decision emails and updates your application status for you.
+Students often juggle:
 
-Tech Stack 🛠️
-Language: Python 3.11+
+* Multiple admissions portals
+* Email inboxes
+* Spreadsheets
+* Application deadlines
+* College research websites
 
-Framework: PyQt6 for the desktop GUI
+Pathwise brings these tools together into a single desktop application designed to simplify the admissions journey.
 
-AI: Google Gemini API (gemini-1.5-flash)
+---
 
-APIs: Google Gmail API, College Scorecard API
+## Features
 
-Styling: Custom stylesheets for a modern, responsive UI
+### College Discovery & Matching
 
-🚀 Getting Started: Lock In
-Follow these steps to get Pathwise running on your local machine.
+Explore colleges using live data from the College Scorecard API.
 
-1. Prerequisites
-Make sure you have Python 3.11 or newer installed on your system.
+View:
 
-2. Clone the Repository
-Open your terminal or command prompt and clone this repository:
+* Acceptance rates
+* Tuition costs
+* SAT statistics
+* Graduation rates
+* Enrollment data
+* Geographic information
 
-git clone [https://github.com/your-username/pathwise-app.git](https://github.com/your-username/pathwise-app.git)
-cd pathwise-app
+Compare institutions and identify schools that align with your academic profile and goals.
 
-3. Set Up a Virtual Environment
-It's highly recommended to use a virtual environment to keep dependencies clean.
+---
 
-# For Windows
-python -m venv venv
-venv\Scripts\activate
+### Application Dashboard
 
-# For macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
+Track every application from a centralized dashboard.
 
-4. Install Dependencies
-Install all the required Python packages using the requirements.txt file.
+Manage:
 
-pip install -r requirements.txt
+* Application status
+* Submission progress
+* Decision outcomes
+* Personal notes
+* Important deadlines
 
-5. Configure Environment Variables
-This is the most important step. You need to provide your own API keys for the app to function.
+No more switching between spreadsheets and admissions portals.
 
-Find the .env.example file in the project folder.
+---
 
-Make a copy of it and rename the copy to .env.
+### Gmail Admissions Monitor
 
-Open the new .env file. You will fill in the values in the next steps.
+Secure Gmail integration using OAuth authentication.
 
-🔑 API Key & Credentials Setup
-You need to get two things from Google: a Gemini API Key and Gmail API Credentials.
+Automatically identify:
 
-Part A: Get Your Google Gemini API Key
-This key allows the AI features of the app to work.
+* Application updates
+* Decision notifications
+* Admissions correspondence
 
-Go to Google AI Studio.
+Stay informed without constantly refreshing your inbox.
 
-Sign in with your Google account.
+---
 
-Click the "Get API key" button, usually found in the top right corner.
+### AI-Assisted Guidance
 
-In the menu that appears, click "Create API key in new project".
+Built-in AI tools help students navigate the admissions process by providing:
 
-A new key will be generated for you. Copy this key.
+* College recommendations
+* Information summaries
+* Planning assistance
+* Decision support
 
-Open your .env file and paste the key:
+---
 
-GEMINI_API_KEY="your-gemini-api-key-goes-here"
+### Modern Desktop Experience
 
-Part B: Get Your Gmail API Credentials (credentials.json)
-This allows the "Auto Monitor" feature to securely read your emails. The app only gets permission to read emails, not send or delete them.
+Built using PyQt6 with a clean and intuitive interface.
 
-Go to the Google Cloud Console.
+Designed to provide:
 
-Create a New Project:
+* Fast navigation
+* Organized workflows
+* Responsive layouts
+* Accessible information
 
-Click the project dropdown at the top of the page and click "New Project".
+---
 
-Give it a name like "Pathwise Gmail Client" and click "Create".
+## Tech Stack
 
-Enable the Gmail API:
+### Languages
 
-In the search bar at the top, type "Gmail API" and select it.
+* Python
 
-Click the "Enable" button.
+### Frameworks & Libraries
 
-Configure the OAuth Consent Screen:
+* PyQt6
+* Requests
+* Google OAuth
+* Gmail API Libraries
 
-In the left-hand menu, go to APIs & Services > OAuth consent screen.
+### APIs
 
-Choose "External" for the User Type and click "Create".
+* College Scorecard API
+* Gmail API
 
-Fill in the required fields:
+### Development Tools
 
-App name: Pathwise Desktop App
+* Git
+* GitHub
+* Visual Studio Code
 
-User support email: Your email address.
+---
 
-Developer contact information: Your email address.
+## Screenshots
 
-Click "Save and Continue" through the "Scopes" and "Test users" sections. You don't need to add anything here. Finally, click "Back to Dashboard".
+### Career Counselor
 
-Create OAuth 2.0 Credentials:
+![Career Counselor](Screenshots/counselor.png)
 
-In the left-hand menu, go to APIs & Services > Credentials.
+### College Matching
 
-Click "+ CREATE CREDENTIALS" at the top and select "OAuth client ID".
+![College Matching](Screenshots/matching.png)
 
-For the Application type, select "Desktop app".
+### Application Tracker
 
-Give it a name (e.g., "Pathwise Desktop Client") and click "Create".
+![Tracker](Screenshots/tracker.png)
+![Dashboard](Screenshots/dashboard.png)
 
-Download Your Credentials:
+### Academic Explainer
 
-A window will pop up showing your Client ID and Secret. Close this window.
+![Academic Explainer](Screenshots/explainer.png)
 
-In the list of "OAuth 2.0 Client IDs," find the one you just created and click the download icon (a down arrow) on the right.
+---
 
-This will download a JSON file. Rename this file to credentials.json.
+## Challenges
 
-Move the credentials.json file into the root folder of your Pathwise project (the same folder where Pathwise.py is).
+Developing Pathwise involved solving several technical challenges:
 
-Update Your .env file:
+* Gmail OAuth authentication
+* External API integration
+* Managing admissions-related data
+* Building a scalable desktop architecture
+* Designing an intuitive user experience
 
-Make sure the path in your .env file points to this file.
+---
 
-GMAIL_CREDENTIALS_PATH="credentials.json"
+## Future Development
 
-▶️ Running the Application
-Once your dependencies are installed and your .env file is configured, you're ready to go.
+Planned improvements include:
 
-Open a terminal in the project folder and run:
+* Scholarship matching
+* Advanced recommendation systems
+* Timeline visualizations
+* Essay management tools
+* Mobile companion application
 
-python Pathwise.py
+---
 
-The application window should appear. The first time you use a feature that requires Gmail, a browser window will open asking you to grant permission. This is the secure OAuth flow in action!
+## AI Usage Disclosure
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+Artificial intelligence tools were used as development assistants for debugging, documentation, brainstorming, and code explanations.
+
+All application design decisions, implementation, integration, testing, and project direction were completed by the author.
+
+This README was generated with assistance from ChatGPT.
+
+---
+
+## Author
+
+Ishrak Iqbal
