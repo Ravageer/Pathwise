@@ -4,6 +4,36 @@
 
 ---
 
+## Usage Guide
+
+You can either download the demo exe to simply run it or manuallly set it up.
+
+Manual setup:
+  -Install the dependencies from the requirements.txt
+  -Create a .env file following the provided example and fill it in.
+      1. Grab a gemini api key by navigating to Google AI Studio, accepting the terms of service, and clicking "Create API key" to generate a unique string.
+    
+
+
+## 🔐 Google API Setup
+
+To enable the Gmail Admissions Monitor, you must create a project in the Google Cloud Console:
+
+1. **Enable the Gmail API:** - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+   - Create a new project.
+   - Search for "Gmail API" and click **Enable**.
+2. **Create OAuth Credentials:**
+   - Go to **APIs & Services > Credentials**.
+   - Click **Create Credentials** > **OAuth client ID**.
+   - Select **Desktop App** as the application type.
+   - Download the generated JSON file and rename it to `credentials.json`.
+   - Place `credentials.json` in the root folder of the Pathwise application.
+3. **First Run:**
+   - When you launch Pathwise, the app will open your browser to authenticate.
+   - Google will generate a `gmail_token.pickle` file automatically upon successful login.
+
+
+
 ## Why Pathwise?
 
 The college application process is fragmented.
